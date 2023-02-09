@@ -37,6 +37,7 @@ dependencies:
   stacked: ^3.1.0+3
   stacked_services: ^0.9.9
   pedometer: ^3.0.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

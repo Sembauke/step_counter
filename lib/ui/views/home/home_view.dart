@@ -50,7 +50,7 @@ class HomeView extends StackedView<HomeViewModel> {
                       ),
                       FutureBuilder(
                         future: viewModel.steps,
-                        initialData: 0,
+                        initialData: 1,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
