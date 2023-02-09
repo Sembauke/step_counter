@@ -1,36 +1,31 @@
-import 'package:my_first_app/app/app.bottomsheets.dart';
-import 'package:my_first_app/app/app.dialogs.dart';
-import 'package:my_first_app/app/app.locator.dart';
-import 'package:my_first_app/ui/common/app_strings.dart';
+import 'dart:async';
+import 'dart:developer';
+import 'package:pedometer/pedometer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
+  Stream<StepCount>? _stepCountStream;
+  Stream<StepCount>? get stepCountStream => _stepCountStream;
 
-  String get counterLabel => 'Counter is: $_counter';
+  Future? steps;
 
-  int _counter = 0;
-
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
+  void initialise() {
+    initialisePedometer();
   }
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
-    );
+  void onStepCount(StepCount event) {
+    steps = Future.value(event.steps);
+    log('event.steps: ${event.steps}');
+    notifyListeners();
   }
 
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
+  void handleStepError(error) {
+    log('error: $error');
+  }
+
+  Future<void> initialisePedometer() async {
+    _stepCountStream = Pedometer.stepCountStream;
+    notifyListeners();
+    _stepCountStream!.listen(onStepCount).onError(handleStepError);
   }
 }
