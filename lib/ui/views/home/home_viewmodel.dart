@@ -9,6 +9,7 @@ class HomeViewModel extends BaseViewModel {
   Stream<StepCount>? get stepCountStream => _stepCountStream;
 
   Future? steps;
+  int stepCount = 0;
 
   void initialise() {
     checkUserPermissions();
@@ -30,8 +31,8 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void onStepCount(StepCount event) {
-    steps = Future.value(event.steps);
-    log('event.steps: ${event.steps}');
+    stepCount++;
+    steps = Future.value(stepCount);
     notifyListeners();
   }
 
