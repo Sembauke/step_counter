@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter_background/flutter_background.dart';
 import 'package:my_first_app/app/app.locator.dart';
 import 'package:my_first_app/services/step_storage_service.dart';
 import 'package:pedometer/pedometer.dart';
@@ -34,12 +35,36 @@ class HomeViewModel extends BaseViewModel {
       await Permission.activityRecognition.request().then((statusValue) {
         if (statusValue != PermissionStatus.denied) {
           initialisePedometer();
+          initBackgroundService();
         } else {
           checkUserPermissions();
         }
       });
     } else {
       initialisePedometer();
+      initBackgroundService();
+    }
+  }
+
+  void initBackgroundService() async {
+    var androidConfig = const FlutterBackgroundAndroidConfig(
+      notificationTitle: "flutter_background example app",
+      notificationText:
+          "Background notification for keeping the example app running in the background",
+      notificationImportance: AndroidNotificationImportance.Default,
+    );
+    bool success = await FlutterBackground.initialize(
+      androidConfig: androidConfig,
+    );
+
+    if (success) {
+      bool enabled = await FlutterBackground.enableBackgroundExecution();
+
+      if (enabled) {
+        log('background enabled');
+      } else {
+        throw Exception(enabled);
+      }
     }
   }
 

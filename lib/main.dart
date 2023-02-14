@@ -6,7 +6,7 @@ import 'package:my_first_app/app/app.router.dart';
 import 'package:my_first_app/ui/common/app_colors.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-void main() {
+void main() async {
   setupLocator();
   setupDialogUi();
   setupBottomSheetUi();

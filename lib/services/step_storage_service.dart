@@ -21,7 +21,7 @@ class StepStorageService {
 
     if (steps == null) setSteps(int.parse('1'));
 
-    return steps ?? '1';
+    return steps ?? '0';
   }
 
   Future<void> setSteps(int steps) async {

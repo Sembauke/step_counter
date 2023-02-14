@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.my_first_app">
        <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+       <uses-permission android:name="android.permission.WAKE_LOCK" />
+       <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+       <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
    <application
         android:label="my_first_app"
         android:name="${applicationName}"
