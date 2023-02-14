@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:my_first_app/app/app.locator.dart';
 import 'package:my_first_app/services/step_storage_service.dart';
 import 'package:pedometer/pedometer.dart';
@@ -46,26 +48,42 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
+  onStart(FlutterBackgroundService serviceInstance) {}
+
   void initBackgroundService() async {
-    var androidConfig = const FlutterBackgroundAndroidConfig(
-      notificationTitle: "flutter_background example app",
-      notificationText:
-          "Background notification for keeping the example app running in the background",
-      notificationImportance: AndroidNotificationImportance.Default,
-    );
-    bool success = await FlutterBackground.initialize(
-      androidConfig: androidConfig,
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final service = FlutterBackgroundService();
+
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'stepper',
+      'StepUp',
+      description: 'steps taken',
+      importance: Importance.low,
     );
 
-    if (success) {
-      bool enabled = await FlutterBackground.enableBackgroundExecution();
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
-      if (enabled) {
-        log('background enabled');
-      } else {
-        throw Exception(enabled);
-      }
-    }
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(
+          channel,
+        );
+
+    await service.configure(
+      iosConfiguration: IosConfiguration(),
+      androidConfiguration: AndroidConfiguration(
+        onStart: onStart(service),
+        autoStart: true,
+        isForegroundMode: true,
+        notificationChannelId: 'stepper',
+        initialNotificationTitle: 'AWESOME SERVICE',
+        initialNotificationContent: 'Initializing',
+        foregroundServiceNotificationId: 1,
+      ),
+    );
   }
 
   void onStepCount(StepCount event) async {
