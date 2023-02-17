@@ -1,4 +1,4 @@
-package com.stepup.package.name
+package sembauke.stepup
 
 import io.flutter.embedding.android.FlutterActivity
 
