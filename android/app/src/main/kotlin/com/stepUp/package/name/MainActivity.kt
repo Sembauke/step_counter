@@ -1,4 +1,4 @@
-package com.example.my_first_app
+package com.stepUp.package.name
 
 import io.flutter.embedding.android.FlutterActivity
 
